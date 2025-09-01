@@ -3,11 +3,14 @@
     "target": "ESNext",
     "module": "nodenext",
     "strict": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "skipLibCheck": true,
     "types": [
       "node"
     ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "noEmit": true,
     "emitDeclarationOnly": false,
     "allowImportingTsExtensions": true,
