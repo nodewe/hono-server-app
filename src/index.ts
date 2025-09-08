@@ -45,7 +45,7 @@ app.onError(async (err,ctx)=>{
 
   fs.appendFile(LOG_PATH,`[${curTime.format('HH:mm:ss')}] ${method} ${url} ERROR - \n ${err.stack} \n`)
 
-  console.log(process.env.NODE_ENV,'env')
+  // console.log(process.env.NODE_ENV,'env')
 
   
   // if(process.env.NODE_ENV === 'PROD'){
