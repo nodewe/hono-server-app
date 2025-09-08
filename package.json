@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
-    "build": "npx esbuild src/index.ts --bundle --platform=node --format=esm --target=node18 --outfile=dist/index.js",
+    "build": "npx esbuild src/index.ts --bundle --platform=node --format=cjs --target=node18 --outfile=dist/index.cjs",
     "start": "node dist/index.js"
   },
   "dependencies": {
