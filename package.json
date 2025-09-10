@@ -12,10 +12,14 @@
     "dotenv": "^17.2.1",
     "formdata-node": "^6.0.3",
     "hono": "^4.9.5",
+    "hono-session": "^1.2.0",
     "ioredis": "^5.7.0",
-    "mysql2": "^3.14.4"
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.4",
+    "svg-captcha": "^1.4.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.11.17",
     "cross-env": "^7.0.3",
     "esbuild": "^0.25.9",
