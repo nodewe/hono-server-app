@@ -1,17 +1,24 @@
 import { Hono } from 'hono'
 
-import user from './user/index.ts'
+import userController from './user/controller.ts'
 
-import menu from "./menu/index.ts"
+import menuController from "./menu/controller.ts"
 
-import file from "./file/index.ts"
+import fileContrller from "./file/controller.ts"
+
+import authController from "./auth/controller.ts"
+
+import roleController from "./role/controller.ts"
+
 
 const admin = new Hono()
 
 
-admin.route('/user', user)
-admin.route('/menu', menu)
-admin.route('/file',file)
+admin.route('/user', userController)
+admin.route('/menu', menuController)
+admin.route('/file',fileContrller)
+admin.route('/auth',authController)
+admin.route('/role',roleController)
 
 
 export default admin
