@@ -19,11 +19,12 @@ import mysql from "mysql2/promise"
 * 
 */
 const db = mysql.createPool({
-  host: "localhost",
+  host: "192.168.126.130",
   user: "root",
-  port:3306,
-  password: "root",
-  database: "blog",
+  port:63306,
+  charset: "utf8mb4",
+  password: "$Czy1314520",
+  database: "hono-base",
 });
 
 
