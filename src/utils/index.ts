@@ -1,5 +1,10 @@
 import path from 'path'
 import fs from 'fs/promises'
+import dayjs from 'dayjs'
+
+/**
+* @description 确保文件所在的目录存在
+*/
 export async function ensureDirForFile(filePath:string) {
     const dir = path.dirname(filePath)
     try {
@@ -10,3 +15,69 @@ export async function ensureDirForFile(filePath:string) {
       throw err
     }
   }
+
+/**
+* @description 错误收集函数
+*/
+export const errorCollector = async (err:any,ctx:any)=>{ 
+  const method = ctx.req.method;
+  const url = ctx.req.url;
+   const curTime = dayjs();
+    const LOG_PATH = `logs/${curTime.format("YYYY-MM-DD")}-error.log`;
+    await ensureDirForFile(LOG_PATH);
+  
+    fs.appendFile(
+      LOG_PATH,
+      `[${curTime.format("HH:mm:ss")}] ${method} ${url} ERROR - \n ${
+        err.stack
+      } \n`
+    );
+}
+
+
+/**
+ *@description 将扁平化的数据转化为 tree类型
+ * @param list.list
+ * @param list {Array} 数据源
+ * @param parentFunc {Function}  父节点的的数据筛选
+ * @param childFunc {Function}  后代节点的筛选
+ * @param primaryKey {String}  主键字段 默认 id字段
+ * @param parentKey {String}  父级id 默认 父级id
+ * @param list.parentFunc
+ * @param list.childFunc
+ * @param list.primaryKey
+ * @param list.parentKey
+ * @return {Array}  tree 类型数组
+ */
+//@ts-ignore
+ export const buildTree = ({ list, parentFunc, childFunc, primaryKey = 'id', parentKey = 'parent_id' })=>{
+  //@ts-ignore
+  const getNode = id => {
+    const nodes = [];
+    for (const listElement of list) {
+      if (listElement[parentKey] == id) {
+        const menuItem = childFunc(listElement);
+        menuItem.children = getNode(listElement[primaryKey]);
+
+        nodes.push(menuItem);
+      }
+    }
+    if (nodes.length === 0) return;
+    return nodes;
+  };
+
+  const nodes = [];
+  //筛查出数据源中tree_path 的length 最小的数 作为判断根节点的依据
+  //@ts-ignore
+  const min = Math.min(...list.map(ele=>ele.tree_path.split(',').length))
+  // 先处理顶级根节点
+  for (const listElement of list) {
+    if(listElement.tree_path.split(',').length==min){
+      const item = parentFunc(listElement);
+      item.children = getNode(listElement[primaryKey]);
+      nodes.push(item);
+    }
+    
+  }
+  return nodes;
+}
