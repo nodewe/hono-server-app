@@ -17,7 +17,7 @@ export const jwtMiddleware = async (ctx: any, next: any) => {
             const conn = await db.getConnection();
             // 直接将当前用户信息查出来
             let [info] = await conn.query(
-                'select id,username,nickname,gender,avatar,mobile,status,email,deleted,create_time,update_time from sys_user where id = ?',
+                'select id,username,nickname,gender,avatar,mobile,status,email,deleted,createTime from sys_user where id = ?',
                 // @ts-ignore
                 [ret.id]
             );
@@ -28,7 +28,7 @@ export const jwtMiddleware = async (ctx: any, next: any) => {
             // 查询role 转换为code
 
             const [roleList] = await conn.query(
-                'select id,code from sys_role where sys_role.id in (select role_id from sys_user_role where user_id = ?)',
+                'select id,code from sys_role where sys_role.id in (select roleId from sys_user_role where userId = ?)',
                  // @ts-ignore
                 [ret.id]
             );
@@ -45,7 +45,7 @@ export const jwtMiddleware = async (ctx: any, next: any) => {
             // 封装 perms
             // 使用角色的id集合查询 菜单表 里面perm不是NULL 并且菜单id 为 关联表使用role_id 查询到的菜单id 查询perm
             let [perms] = await conn.query(
-                'select * from sys_menu where perm IS NOT NULL and sys_menu.id in (select menu_id from sys_role_menu WHERE FIND_IN_SET(role_id,?))',
+                'select * from sys_menu where perm IS NOT NULL and sys_menu.id in (select menuId from sys_role_menu WHERE FIND_IN_SET(roleId,?))',
                 [userInfo.roleIds.join(',')]
             );
             //释放连接
