@@ -13,7 +13,8 @@ import roleController from "./role/controller.ts"
 import deptController from "./dept/controller.ts"
 //字典类型
 import dictTypeController from "./dictType/controller.ts"
-
+//字典数据
+import dictDataController from "./dictData/controller.ts"
 const admin = new Hono()
 
 
@@ -24,6 +25,7 @@ admin.route('/auth',authController)
 admin.route('/role',roleController)
 admin.route('/dept',deptController)
 admin.route('/dictType',dictTypeController)
+admin.route('/dictData',dictDataController)
 
 
 export default admin
