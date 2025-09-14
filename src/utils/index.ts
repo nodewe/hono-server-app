@@ -50,7 +50,7 @@ export const errorCollector = async (err:any,ctx:any)=>{
  * @return {Array}  tree 类型数组
  */
 //@ts-ignore
- export const buildTree = ({ list, parentFunc, childFunc, primaryKey = 'id', parentKey = 'parent_id' })=>{
+ export const buildTree = ({ list, parentFunc, childFunc, primaryKey = 'id', parentKey = 'parentId' })=>{
   //@ts-ignore
   const getNode = id => {
     const nodes = [];
@@ -69,10 +69,10 @@ export const errorCollector = async (err:any,ctx:any)=>{
   const nodes = [];
   //筛查出数据源中tree_path 的length 最小的数 作为判断根节点的依据
   //@ts-ignore
-  const min = Math.min(...list.map(ele=>ele.tree_path.split(',').length))
+  const min = Math.min(...list.map(ele=>ele.treePath.split(',').length))
   // 先处理顶级根节点
   for (const listElement of list) {
-    if(listElement.tree_path.split(',').length==min){
+    if(listElement.treePath.split(',').length==min){
       const item = parentFunc(listElement);
       item.children = getNode(listElement[primaryKey]);
       nodes.push(item);
@@ -80,4 +80,11 @@ export const errorCollector = async (err:any,ctx:any)=>{
     
   }
   return nodes;
+}
+
+/**
+* @description 转换为模糊查询字符串
+*/
+export const toLikeStr = (str:string)=>{
+  return str.replace(/[%_\\]/g, '\\$&');
 }
