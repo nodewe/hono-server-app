@@ -23,11 +23,13 @@ const options = async () => {
 */
 const add = async (role:ISysRole)=>{
     const conn = await db.getConnection()
-    const sql = `insert into sys_role(name,code,sort) values(?,?,?)`
+    const sql = `insert into sys_role(name,code,sort,createTime,updateTime) values(?,?,?,?,?)`
     const [result] = await conn.query(sql, [
         role.name,
         role.code,
-        role.sort
+        role.sort,
+        role.createTime,
+        role.updateTime
     ])
     await conn.release()
     const resultRet = result as queryResultType;
@@ -42,12 +44,13 @@ const add = async (role:ISysRole)=>{
 */
 const update = async (role:ISysRole)=>{
     const conn = await db.getConnection()
-    const sql = `update sys_role set name = ?,code = ?,sort = ?,status=? where id = ?`
+    const sql = `update sys_role set name = ?,code = ?,sort = ?,status=?,updateTime=? where id = ?`
     const [result] = await conn.query(sql, [
         role.name,
         role.code,
         role.sort,
         role.status,
+        role.updateTime,
         role.id
     ])
     await conn.release()
@@ -111,10 +114,10 @@ const page = async (page: number, pageSize: number, name: string) => {
         (page - 1) * pageSize, pageSize]);
     const rets = result as Array<ISysRole>;
     // 循环处理时间
-    rets.forEach(item => {
-        item.createTime = item.createTime ? dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss') : "-";
-        item.updateTime = item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : "-";
-    });
+    // rets.forEach(item => {
+    //     item.createTime = item.createTime ? dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss') : "-";
+    //     item.updateTime = item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : "-";
+    // });
     //查出总数
     const [total] = await conn.query(`select count(id) as total,status from sys_role where concat(name) LIKE CONCAT('%', ?, '%')`, [toLikeStr(name)]);
     const totalCount = (total as Array<{ total: number }>)[0].total;

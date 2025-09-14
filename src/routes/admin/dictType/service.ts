@@ -55,12 +55,14 @@ const info = async (dictTypeId: number) => {
 
 const add = async (dictType: ISysDictType) => { 
     const conn = await db.getConnection()
-    const sql = `insert into sys_dict_type(name,code,status,remark) values(?,?,?,?)`
+    const sql = `insert into sys_dict_type(name,code,status,remark,createTime,updateTime) values(?,?,?,?,?,?)`
     const [result] = await conn.query(sql, [
         dictType.name,
         dictType.code,
         dictType.status,
-        dictType.remark
+        dictType.remark,
+        dictType.createTime,
+        dictType.updateTime
     ])
     await conn.release()
     return result
@@ -72,12 +74,13 @@ const add = async (dictType: ISysDictType) => {
 */
 const update = async (dictType: ISysDictType) => { 
     const conn = await db.getConnection()
-    const sql = `update sys_dict_type set name=?,code=?,status=?,remark=? where id=?`
+    const sql = `update sys_dict_type set name=?,code=?,status=?,remark=?,updateTime=? where id=?`
     const [result] = await conn.query(sql, [
         dictType.name,
         dictType.code,
         dictType.status,
         dictType.remark,
+        dictType.updateTime,
         dictType.id
     ])
     await conn.release()

@@ -20,6 +20,9 @@ menu.post('/add', async (ctx) => {
   };
   //@ts-ignore
   body.type = types[body.type]
+  body.createTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+  body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
   const res = await service.add(body)
   if(res){
     return ctx.success({  msg: "添加成功" })
@@ -43,7 +46,7 @@ menu.put('/update', async (ctx) => {
   };
   //@ts-ignore
   body.type = types[body.type]
-  body.updateTime = dayjs().toISOString()
+  body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
   const res = await service.update(body)
   if(res){
     return ctx.success({  msg: "修改成功" })

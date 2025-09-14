@@ -19,11 +19,6 @@ const page = async (page: number, pageSize: number, keywords: string,typeCode: s
         // status, status,
         (page - 1) * pageSize, pageSize]);
     const rets = result as Array<ISysDictData>;
-    // 循环处理时间
-    rets.forEach(item => {
-        item.createTime = item.createTime ? dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss') : "-";
-        item.updateTime = item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : "-";
-    });
     //查出总数
     const [total] = await conn.query(`select count(id) as total,status from sys_dict where typeCode=? and concat(name) LIKE CONCAT('%', ?, '%')`, [
         typeCode,
@@ -58,13 +53,15 @@ const info = async (dictDataId: number) => {
 
 const add = async (dictData: ISysDictData) => { 
     const conn = await db.getConnection()
-    const sql = `insert into sys_dict(name,typeCode,value,status,remark) values(?,?,?,?,?)`
+    const sql = `insert into sys_dict(name,typeCode,value,status,remark,createTime,updateTime) values(?,?,?,?,?,?,?)`
     const [result] = await conn.query(sql, [
         dictData.name,
         dictData.typeCode,
         dictData.value,
         dictData.status,
-        dictData.remark
+        dictData.remark,
+        dictData.createTime,
+        dictData.updateTime
     ])
     await conn.release()
     return result
@@ -76,13 +73,14 @@ const add = async (dictData: ISysDictData) => {
 */
 const update = async (dictData: ISysDictData) => { 
     const conn = await db.getConnection()
-    const sql = `update sys_dict set name=?,typeCode=?,value=?,status=?,remark=? where id=?`
+    const sql = `update sys_dict set name=?,typeCode=?,value=?,status=?,remark=?,updateTime where id=?`
     const [result] = await conn.query(sql, [
         dictData.name,
         dictData.typeCode,
         dictData.value,
         dictData.status,
         dictData.remark,
+        dictData.updateTime,
         dictData.id
     ])
     await conn.release()

@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import service from "./service.ts";
+import dayjs from "dayjs";
 
 
 const dictTypeController = new Hono();
@@ -57,6 +58,9 @@ dictTypeController.post('/add', async (ctx) => {
     if (!body.name || !body.code) {
         return ctx.fail({ msg: "参数错误" })
     }
+    body.createTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+    body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
     const res = await service.add(body)
     if (res) {
         return ctx.success({ msg: "添加成功" })
@@ -77,6 +81,8 @@ dictTypeController.put('/update', async (ctx) => {
     if (!body.name || !body.code) {
         return ctx.fail({ msg: "参数错误" })
     }
+    body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
     const res = await service.update(body)
     if (res) {
         return ctx.success({ msg: "修改成功" })

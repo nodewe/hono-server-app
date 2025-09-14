@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import service from "./service.ts";
+import dayjs from "dayjs";
 
 const roleController = new Hono()
 /**
@@ -27,6 +28,8 @@ roleController.post('/add', async (ctx) => {
         return ctx.fail({ msg: '请输入角色代码' })
     }
     body.sort = body.sort || 1;
+    body.createTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    body.updateTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
    const ret =  await service.add(body)
    if(ret){
     return ctx.success({ msg: '添加成功' })
@@ -50,6 +53,7 @@ roleController.put('/update',async (ctx) => {
         return ctx.fail({ msg: '请输入角色代码' })
     }
     body.sort = body.sort || 1;
+    body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
     const ret =  await service.update(body)
     if(ret){
      return ctx.success({ msg: '修改成功' })

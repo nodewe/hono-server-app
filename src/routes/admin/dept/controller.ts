@@ -108,6 +108,8 @@ deptController.post('/add', async (ctx) => {
     if(body.parentId===undefined || body.parentId===''){ 
         return ctx.fail({ msg: '请输入父部门id' })
     }
+    body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+    body.createTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
 
     const res = await service.add(body)
     if(!res){
@@ -131,7 +133,7 @@ deptController.put('/update', async (ctx) => {
         return ctx.fail({ msg: '请输入父部门id' })
     }
     body.sort = body.sort || 1;
-    body.updateTime = dayjs().toISOString()
+    body.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
     const res = await service.update(body)
     if(!res){
         return ctx.fail({ msg: '修改失败' })

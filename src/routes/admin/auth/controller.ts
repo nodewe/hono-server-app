@@ -1,22 +1,34 @@
 import { Hono } from "hono";
-import svgCaptcha from 'svg-captcha';
+import {
+    deleteCookie,
+    getCookie,
+    getSignedCookie,
+    setCookie,
+    setSignedCookie,
+    generateCookie,
+    generateSignedCookie,
+  } from 'hono/cookie'
+import { mathCaptchaGenerator } from '@/utils/captcha.ts';
 const authController = new Hono();
 
 /**
 * @description 获取验证码
 */
 authController.get('/captcha', async (ctx) => {
-    const captcha = svgCaptcha.createMathExpr({
-        width: 115,
-        height: 48,
-        noise: 5,
-        background: '#c6c8c6'
-    });
+
+const captcha = mathCaptchaGenerator.generate({
+    noiseLevel: 4,
+    color: true,
+    difficulty:'easy'
+  });
+    // const captcha = generateCaptcha()
+    // console.log(captcha,'111')
+    const text = captcha.answer.toString()
     //设置session
-    ctx.session.captcha = captcha.text;
+    setCookie(ctx, 'captcha',text )
     const data = {
         captcha: captcha.data,
-        text: captcha.text
+        text: text
     };
     return ctx.success({ data })
 })

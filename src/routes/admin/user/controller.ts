@@ -1,7 +1,12 @@
 import { Hono } from 'hono'
 import service from "./service.ts"
 import jwt from "jsonwebtoken"
+import {
+    deleteCookie,
+    getCookie,
+  } from 'hono/cookie'
 import { jwtConfig } from "@/config/index.ts"
+import dayjs from 'dayjs'
 const user = new Hono();
 
 /**
@@ -38,7 +43,9 @@ user.post("/add", async (ctx) => {
         deptId: body.deptId || "",
         mobile: body.mobile || "",
         email: body.email || "",
-        password: body.password
+        password: body.password,
+        createTime:dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        updateTime:dayjs().format('YYYY-MM-DD HH:mm:ss')
     };
     const isOk = await service.add(user, body.roleIds)
     if (isOk) {
@@ -57,10 +64,14 @@ user.post("/login", async (ctx) => {
     if (!body.username || !body.password) {
         return ctx.fail({ msg: "参数错误" })
     }
-    const captcha = ctx.session.captcha
-    if (body.captcha !== captcha) {
-        return ctx.fail({ msg: "验证码错误" })
-    }
+    const captcha = getCookie(ctx)
+
+    // console.log(captcha,'验证码')
+    // if (body.captcha !== captcha.captcha) {
+    //     deleteCookie(ctx,'capcha')
+    //     return ctx.fail({ msg: "验证码错误" })
+    // }
+    // deleteCookie(ctx,'capcha')
     // console.log(body, '登录')
     const info = await service.login(body.username, body.password);
 
@@ -189,6 +200,7 @@ user.put("/update", async (ctx) => {
         return ctx.fail({ msg: "手机号不能为空" })
     }
     delete body.password
+    body.updateTime =  dayjs().format('YYYY-MM-DD HH:mm:ss')
     const isOk = await service.update(body, body.roleIds);
     if (!isOk) {
         return ctx.fail({ msg: "修改失败" })
