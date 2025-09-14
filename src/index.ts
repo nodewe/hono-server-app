@@ -1,10 +1,10 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import session from "hono-session";
+// import { session } from 'hono-session/src/index.js'
 import dayjs from "dayjs";
 dayjs.locale("zh-cn");
 import { commonMiddleware, jwtMiddleware } from "./middleware/index.ts";
-import { HTTPException } from "hono/http-exception";
+// import { HTTPException } from "hono/http-exception";
 import { serveStatic } from "@hono/node-server/serve-static";
 import {  errorCollector } from "./utils/index.ts";
 import os from "os";
@@ -26,7 +26,6 @@ app.use("*", async (ctx: any, next: any) => {
   }
   return await jwtMiddleware(ctx, next);
 });
-app.use(session());
 
 //静态托管
 app.use(
@@ -74,3 +73,9 @@ serve(
     });
   }
 );
+
+// export default app;
+
+// 如果在 Node.js 里跑：
+// app.fire();
+// export default app
