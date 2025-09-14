@@ -5,6 +5,38 @@ import { buildTree } from "@/utils/index.ts";
 
 const menu = new Hono();
 
+/**
+* @description 获取菜单选项列表
+*/
+menu.get('/options',async (ctx)=>{
+  const menuList = await service.options()
+  if (menuList.length) {
+    const data = buildTree({
+      list: menuList,
+      //@ts-ignore
+      parentFunc(item) {
+        return {
+          value: item.id,
+          label: item.name,
+        };
+      },
+      //@ts-ignore
+      childFunc(item) {
+        return {
+          value: item.id,
+          label: item.name,
+        };
+      },
+    });
+    return ctx.success({data})
+  }
+  return ctx.fail({data:[]})
+ 
+});
+/**
+* @description 获取菜单列表
+*/
+
 menu.get('/route/list',async (ctx)=>{
     try {
         const roleIds = ctx.state.userInfo.roleIds;
@@ -51,7 +83,7 @@ menu.get('/route/list',async (ctx)=>{
             };
           },
         });
-  
+        
   
         // await conn.commit()
         return ctx.success({data: menuList})
