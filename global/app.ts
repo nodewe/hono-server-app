@@ -1,5 +1,4 @@
 // 在文件顶部导入 Hono 类型
-import { Hono, Context } from 'hono'
 
 // 声明全局变量类型扩展（或在 types/global.d.ts 中声明）
 declare module 'hono' {
@@ -20,7 +19,11 @@ declare module 'hono' {
 
 
 declare global {
-  interface  queryResult {
-    
+  // 查询结果类型
+  type  queryResultType = {
+    //插入的id
+      insertId?: number;
+      //受影响的行数
+      affectedRows: number;
   }
 }
