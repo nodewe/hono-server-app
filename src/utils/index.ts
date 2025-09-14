@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs/promises'
+import fsOri from "fs"
 import dayjs from 'dayjs'
 
 /**
@@ -87,4 +88,16 @@ export const errorCollector = async (err:any,ctx:any)=>{
 */
 export const toLikeStr = (str:string)=>{
   return str.replace(/[%_\\]/g, '\\$&');
+}
+
+/**
+* @description 获取配置
+*/
+export const getConfig = ()=>{
+  const configFilePath = path.join(process.cwd(),'config.js')
+  // console.log(configFilePath)
+  const externalConfig = require(configFilePath);
+  // const data = fsOri.readFileSync(configFilePath,'utf8')
+  // console.log(externalConfig.default,'externalConfig')
+  return externalConfig
 }
