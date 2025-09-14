@@ -1,5 +1,5 @@
 import mysql from "mysql2/promise"
-
+import {getConfig } from "@/utils/index"
 /**
 * @description mysql
 * @see https://sidorares.github.io/node-mysql2/docs/examples
@@ -18,14 +18,10 @@ import mysql from "mysql2/promise"
 * conn.release();
 * 
 */
-const db = mysql.createPool({
-  host: "192.168.126.130",
-  user: "root",
-  port:63306,
-  charset: "utf8mb4",
-  password: "$Czy1314520",
-  database: "hono-base",
-});
+
+const config = getConfig()
+
+const db = mysql.createPool(config.mysql);
 
 
 
