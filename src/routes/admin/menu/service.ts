@@ -68,11 +68,14 @@ const add = async (menu: ISysMenu) => {
         const sql = `insert into sys_menu set ?`
         const [menuResult] = await conn.query(sql, [menu])
         const menuRes = menuResult as queryResultType
-        await conn.commit()
-        await conn.release()
+    
         if(menuRes.affectedRows > 0){
+            await conn.commit()
+            await conn.release()
             return true
         }
+        await conn.rollback()
+        await conn.release()
         return false
     } catch (error) {
         await conn.rollback()
