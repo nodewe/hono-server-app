@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+  #mysql 配置
+  mysql:
+  # 总是重启
+    restart: always
+    # 容器名
+    container_name: mysql81
+    # 环境
+    environment:
+    #设置mysql 密码
+      MYSQL_ROOT_PASSWORD: $Czy1314520
+      # mysql镜像
+    image: mysql:8.1.0
+    #端口映射 我这里将docker mysql 3306服务 映射到宿主机的63306端口
+    ports:
+      - "63306:3306"
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+    volumes:
+      - /docker/mysql/data:/var/lib/mysql
+      - /docker/mysql/log:/var/log/mysql
+      - /docker/mysql/conf:/etc/mysql/conf.d
+      - /etc/localtime:/etc/localtime
+    networks:
+      - mynet
+  redis:
+    restart: always
+    image: redis:7.4
+    networks:
+      - mynet
+    container_name: redis74
+    #设置密码
+    command: redis-server --appendonly yes --requirepass Czy1314520
+    ports:
+      - "9379:6379"
+    volumes:
+      - /docker/redis/data:/data
+      - /docker/redis/redis.conf:/etc/redis/redis.conf
+      
