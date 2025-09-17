@@ -90,8 +90,6 @@ user.post("/login", async (ctx) => {
 
 //获取当前用户信息
 user.get("/me", async (ctx) => {
-    // const body = await ctx.req.json()
-    // console.log(ctx.state.userInfo, '获取当前用户信息')
     return ctx.success({ data: ctx.state.userInfo })
 });
 
