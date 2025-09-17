@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs/promises'
 import fsOri from "fs"
 import dayjs from 'dayjs'
-
+import JSON5 from 'json5'
 /**
 * @description 确保文件所在的目录存在
 */
@@ -93,11 +93,20 @@ export const toLikeStr = (str:string)=>{
 /**
 * @description 获取配置
 */
-export const getConfig = ()=>{
-  const configFilePath = path.join(process.cwd(),'config.js')
+export const getConfig =  ()=>{
+  const filePath = path.join(process.cwd(), 'config.json5');
+
+  const fileData = fsOri.readFileSync(filePath, 'utf8');
+
+  // console.log(fileData,'fileData')
+
+  const parseData = JSON5.parse(fileData);
+  
+  // console.log(parseData,'parseData')
+  return parseData
+  // 
+
   // console.log(configFilePath)
-  const externalConfig = require(configFilePath);
-  // const data = fsOri.readFileSync(configFilePath,'utf8')
-  // console.log(externalConfig.default,'externalConfig')
-  return externalConfig
+  // const externalConfig = require(configFilePath);
+  // return externalConfig.default || externalConfig
 }
