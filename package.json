@@ -14,6 +14,7 @@
     "hono": "^4.9.5",
     "hono-session": "^1.2.0",
     "ioredis": "^5.7.0",
+    "json5": "^2.2.3",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.4",
     "svg-captcha": "^1.4.0"
