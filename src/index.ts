@@ -19,7 +19,7 @@ const app = new Hono();
 app.use("*", commonMiddleware);
 // 登录验证
 app.use("*", async (ctx: any, next: any) => {
-  
+    console.log(ctx.req.path, 'ctx.req.path')
   //白名单
   if (whiteList.includes(ctx.req.path)) {
     return await next();
