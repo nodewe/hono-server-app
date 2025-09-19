@@ -3,11 +3,12 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
-    "build": "npx esbuild src/index.ts --bundle --platform=node --format=cjs --target=node18 --outfile=dist/index.cjs",
+    "build": "node build.js",
     "start": "node dist/index.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.0",
+    "@hono/node-ws": "^1.2.0",
     "dayjs": "^1.11.18",
     "dotenv": "^17.2.1",
     "formdata-node": "^6.0.3",
@@ -17,11 +18,13 @@
     "json5": "^2.2.3",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.4",
-    "svg-captcha": "^1.4.0"
+    "svg-captcha": "^1.4.0",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.11.17",
+    "@types/ws": "^8.18.1",
     "cross-env": "^7.0.3",
     "esbuild": "^0.25.9",
     "tsx": "^4.7.1",
