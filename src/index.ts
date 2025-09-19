@@ -11,10 +11,14 @@ import os from "os";
 import adminRouter from "./routes/admin/index.ts";
 import dotenv from "dotenv";
 import { whiteList } from "./config/index.ts";
+import { createNodeWebSocket } from '@hono/node-ws'
+
 const nodeEnv = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${nodeEnv}` });
 
 const app = new Hono();
+
+const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app })
 
 app.use("*", commonMiddleware);
 // 登录验证
@@ -44,6 +48,38 @@ app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
+//ws 连接
+app.get('/ws', upgradeWebSocket((c) => {
+  return {
+    onOpen: (evt, ws) => {
+      console.log('ws open')
+      ws.send('Hello from Hono WebSocket!')
+    },
+    onMessage: (evt, ws) => {
+      
+      console.log('ws message:', evt.data)
+       const wsData = JSON.stringify(evt.data) 
+       // data 数据类型
+       const  data = JSON.parse(wsData) as {
+        // 命令类型
+        cmd:string,
+        // 携带的数据
+        data:any
+       }
+
+       console.log(data,'data')
+      ws.send(`Echo: ${evt.data}`)
+    },
+    //关闭
+    onClose(evt, ws) {
+      console.log(evt, 'ws close')
+    },
+    onError(evt, ws) {
+      console.log(evt, 'ws error')
+    },
+  }
+}))
+
 app.route("/admin", adminRouter);
 
 // 监听全局错误
@@ -55,7 +91,9 @@ app.onError(async (err, ctx) => {
   });
 });
 
-serve(
+// const server = createServer(app.fetch)
+
+const server = serve(
   {
     fetch: app.fetch,
     port: 3000,
@@ -74,8 +112,4 @@ serve(
   }
 );
 
-// export default app;
-
-// 如果在 Node.js 里跑：
-// app.fire();
-// export default app
+injectWebSocket(server)
