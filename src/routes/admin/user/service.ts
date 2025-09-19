@@ -156,7 +156,7 @@ const info = async (userId: number) => {
     [userId]
   );
 
-  await conn.release();
+  conn.release();
   const roleIds = roleList as Array<{ roleId: number }>;
   const rets = result as Array<ISysUser>;
   const userInfo = rets[0];
@@ -189,15 +189,7 @@ const page = async (
     pageSize,
   ]);
   const rets = result as Array<ISysUser>;
-  // 循环处理时间
-  rets.forEach((item) => {
-    item.createTime = item.createTime
-      ? dayjs(item.createTime).format("YYYY-MM-DD HH:mm:ss")
-      : "-";
-    item.updateTime = item.updateTime
-      ? dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss")
-      : "-";
-  });
+
   //查出总数
   const [total] = await conn.query(
     `select count(id) as total,status from sys_user where concat(nickname,username,mobile) LIKE CONCAT('%', ?, '%') and IF(''=?,TRUE,CAST(status AS SIGNED)=?)`,
@@ -205,7 +197,7 @@ const page = async (
   );
   const totalCount = (total as Array<{ total: number }>)[0].total;
   // console.log('totalCount', totalCount);
-  await conn.release();
+  conn.release();
   return {
     total: totalCount,
     currentPage: page,
