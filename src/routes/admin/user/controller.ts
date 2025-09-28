@@ -66,12 +66,12 @@ user.post("/login", async (ctx) => {
     }
     const captcha = getCookie(ctx)
 
-    // console.log(captcha,'验证码')
-    // if (body.captcha !== captcha.captcha) {
-    //     deleteCookie(ctx,'capcha')
-    //     return ctx.fail({ msg: "验证码错误" })
-    // }
-    // deleteCookie(ctx,'capcha')
+    console.log(captcha,'验证码')
+    if (body.captcha !== captcha.captcha) {
+        deleteCookie(ctx,'capcha')
+        return ctx.fail({ msg: "验证码错误" })
+    }
+    deleteCookie(ctx,'capcha')
     // console.log(body, '登录')
     const info = await service.login(body.username, body.password);
 
