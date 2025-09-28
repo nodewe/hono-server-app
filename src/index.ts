@@ -23,7 +23,6 @@ const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app })
 app.use("*", commonMiddleware);
 // 登录验证
 app.use("*", async (ctx: any, next: any) => {
-    console.log(ctx.req.path, 'ctx.req.path')
   //白名单
   if (whiteList.includes(ctx.req.path)) {
     return await next();
@@ -56,7 +55,6 @@ app.get('/ws', upgradeWebSocket((c) => {
       ws.send('Hello from Hono WebSocket!')
     },
     onMessage: (evt, ws) => {
-      
       console.log('ws message:', evt.data)
        const wsData = JSON.stringify(evt.data) 
        // data 数据类型
@@ -73,6 +71,13 @@ app.get('/ws', upgradeWebSocket((c) => {
     //关闭
     onClose(evt, ws) {
       console.log(evt, 'ws close')
+      if(evt.type=='close'){
+        ws.send(JSON.stringify({
+          cmd:'close',
+          msg:'连接已断开'
+        }));
+        ws.close()
+      }
     },
     onError(evt, ws) {
       console.log(evt, 'ws error')
