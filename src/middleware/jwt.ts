@@ -21,7 +21,6 @@ export const jwtMiddleware = async (ctx: any, next: any) => {
                 // @ts-ignore
                 [ret.id]
             );
-            await conn.release();
             
              // @ts-ignore
             const userInfo = info[0];
@@ -32,7 +31,6 @@ export const jwtMiddleware = async (ctx: any, next: any) => {
                  // @ts-ignore
                 [ret.id]
             );
-            await conn.release();
             
             // console.log(roleList, 'role');
             //保存角色code
@@ -49,7 +47,7 @@ export const jwtMiddleware = async (ctx: any, next: any) => {
                 [userInfo.roleIds.join(',')]
             );
             //释放连接
-            await conn.release();
+             conn.release();
             //保存角色的perms权限
              // @ts-ignore
             userInfo.perms = perms.map(ele => ele.perm);
